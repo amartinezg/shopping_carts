@@ -1,7 +1,133 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+customers = ["Adaline Denning",
+"Patsy Ellershaw",
+"Sergio Milton-White",
+"Cordy Pretsel",
+"Justis Rowsel",
+"Giorgio Andrioni",
+"Felicdad Rockwill",
+"Laina Humbie",
+"Thayne Hutchcraft",
+"Chadd Crankshaw"]
+
+items = [[7.71, "Honey - Liquid"],
+[82.66, "Jolt Cola - Red Eye"],
+[22.49, "Fish - Artic Char, Cold Smoked"],
+[79.99, "Potatoes - Parissienne"],
+[51.66, "Puree - Passion Fruit"],
+[99.65, "Muffin Batt - Carrot Spice"],
+[73.31, "Nantucket Orange Juice"],
+[68.24, "Bread - Olive"],
+[78.98, "Radish - Black, Winter, Organic"],
+[13.31, "Stock - Beef, White"],
+[26.79, "Mushroom - Chantrelle, Fresh"],
+[15.12, "Pork - Smoked Kassler"],
+[98.92, "Fennel"],
+[45.07, "Bag Clear 10 Lb"],
+[66.8, " Salsify, Organic"],
+[31.41, "Compound - Strawberry"],
+[23.32, "Beer - Steamwhistle"],
+[15.69, "Veal - Knuckle"],
+[84.73, "Dragon Fruit"],
+[37.78, "Apple - Northern Spy"],
+[24.93, "Cheese - Camembert"],
+[53.92, "Chinese Foods - Cantonese"],
+[51.99, "Bread - Pita, Mini"],
+[95.01, "Soup Campbells Split Pea And Ham"],
+[51.6, " Pike - Frozen Fillet"],
+[90.36, "Appetizer - Shrimp Puff"],
+[75.24, "Lettuce - Curly Endive"],
+[65.65, "Brandy Cherry - Mcguinness"],
+[97.28, "Yokaline"],
+[83.8, " Dragon Fruit"],
+[60.91, "Lettuce - Red Leaf"],
+[92.14, "Wine - Savigny - Les - Beaune"],
+[55.78, "General Purpose Trigger"],
+[53.02, "Glaze - Apricot"],
+[82.68, "Lobster - Live"],
+[22.55, "Shrimp - 16/20, Peeled Deviened"],
+[21.03, "Flour - Strong Pizza"],
+[19.81, "Broom - Angled"],
+[23.63, "Sage - Rubbed"],
+[81.8, " Stock - Beef, White"],
+[5.49, " Cabbage Roll"],
+[50.79, "Turnip - White"],
+[95.67, "Cookie Dough - Oatmeal Rasin"],
+[93.6, " Beer - Fruli"],
+[44.6, " Wine - Shiraz South Eastern"],
+[10.44, "Tea - Mint"],
+[54.16, "Crab Brie In Phyllo"],
+[83.75, "Bread Roll Foccacia"],
+[64.61, "Cilantro / Coriander - Fresh"],
+[19.83, "Extract - Almond"],
+[51.93, "Ice Cream Bar - Hagen Daz"],
+[48.77, "Crab Meat Claw Pasteurise"],
+[78.21, "Island Oasis - Raspberry"],
+[99.32, "Soup - Campbells Beef Stew"],
+[14.04, "Chicken - Thigh, Bone In"],
+[12.57, "Tea - Camomele"],
+[13.47, "Yogurt - French Vanilla"],
+[18.75, "Tofu - Soft"],
+[13.4, " Wine - Masi Valpolocell"],
+[76.59, "Kiwi Gold Zespri"],
+[49.26, "Creamers - 10%"],
+[67.69, "Salt - Celery"],
+[47.27, "Jam - Marmalade, Orange"],
+[52.11, "Pork - Loin, Center Cut"],
+[6.96, " Canadian Emmenthal"],
+[56.56, "Flavouring - Orange"],
+[37.61, "Island Oasis - Cappucino Mix"],
+[73.25, "Potatoes - Fingerling 4 Oz"],
+[45.61, "Pie Shell - 9"],
+[41.91, "Ostrich - Fan Fillet"],
+[86.79, "Creme De Cacao White"],
+[88.71, "Chutney Sauce"],
+[6.81, " Orange - Blood"],
+[44.33, "Pasta - Angel Hair"],
+[71.99, "Pasta - Detalini, White, Fresh"],
+[33.11, "Lobster - Tail 6 Oz"],
+[52.7, " Beer - Tetleys"],
+[81.17, "Asparagus - White, Fresh"],
+[74.48, "Wine - Valpolicella Masi"],
+[63.43, "Bread - Sour Sticks With Onion"],
+[84.82, "Coffee Cup 16oz Foam"],
+[34.95, "Filling - Mince Meat"],
+[55.01, "Coffee - Flavoured"],
+[40.74, "Coffee - Decafenated"],
+[94.65, "Cheese - Brie Roitelet"],
+[83.35, "Wine - Wyndham Estate Bin 777"],
+[58.32, "Wine - Jaboulet Cotes Du Rhone"],
+[32.07, "Cardamon Ground"],
+[99.71, "Croissant, Raw - Mini"],
+[24.11, "Potatoes - Instant, Mashed"],
+[12.4, " Wine - Red, Antinori Santa"],
+[17.91, "Oyster - In Shell"],
+[95.57, "Compound - Strawberry"],
+[29.34, "Corn Shoots"],
+[15.05, "Dill Weed - Fresh"],
+[17.78, "Island Oasis - Sweet And Sour Mix"],
+[83.54, "Cheese - Mix"],
+[99.53, "Plaintain"],
+[6.89, " Soup - Campbells Mac N Cheese"],
+[32.54, "Pepper - Green Thai"]]
+
+puts "Deleting old data"
+CartDetail.destroy_all
+Item.destroy_all
+Cart.destroy_all
+
+puts "Creating items"
+items.each do |price, name|
+  Item.create(price: price, name: name)
+end
+
+items_ids = Item.pluck(:id)
+
+puts "Creating carts"
+customers.each do |name|
+  cart = Cart.create(customer_name: name)
+  items = items_ids.sample(rand(2..30)).map do |id|
+    Item.find(id)
+  end
+  cart.items << items
+  cart.save
+end
